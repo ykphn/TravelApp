@@ -91,18 +91,26 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation(libs.retrofit)
 
 
-    implementation("com.google.dagger:hilt-android:2.48")
-    kapt("com.google.dagger:hilt-android-compiler:2.48")
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    implementation(libs.dagger.hilt.android)
+    kapt(libs.hilt.android.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
 
-    implementation ("com.google.code.gson:gson:2.11.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation (libs.gson)
+    implementation(libs.converter.gson)
     //  maps
     implementation (libs.maps.compose)
     implementation (libs.play.services.maps)
+    implementation (libs.play.services.location)
+
+    implementation(libs.kotlinx.coroutines.android)
+
+    implementation(libs.kotlinx.coroutines.play.services)
+
+
+
 
 
 }
