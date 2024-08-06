@@ -2,9 +2,11 @@ package com.example.travelapp.data.model
 
 import com.google.gson.annotations.SerializedName
 
+
 data class OverpassResponse(
     @SerializedName("elements") val elements: List<Element>
 )
+
 
 data class Element(
     @SerializedName("type") val type: String,
