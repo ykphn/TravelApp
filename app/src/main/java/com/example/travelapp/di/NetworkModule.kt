@@ -1,8 +1,14 @@
 package com.example.travelapp.di
 
+import android.app.Application
+import android.content.Context
+import com.example.travelapp.data.location.api.LocationManager
+import com.example.travelapp.data.location.repository.LocationManagerRepository
 import com.example.travelapp.data.remote.api.OverpassApi
 import com.example.travelapp.data.remote.repository.OverpassRepository
 import com.example.travelapp.data.remote.repository.OverpassRepositoryImp
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,5 +41,17 @@ object NetworkModule {
     @Singleton
     fun provideOverpassRepository(api: OverpassApi): OverpassRepository {
         return OverpassRepositoryImp(api)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFusedLocationClient(context: Application): FusedLocationProviderClient {
+        return LocationServices.getFusedLocationProviderClient(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLocationManagerRepository(context: Application, fusedLocationClient: FusedLocationProviderClient): LocationManager {
+        return LocationManagerRepository(context, fusedLocationClient)
     }
 }
