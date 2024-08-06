@@ -4,9 +4,14 @@ plugins {
 
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+
+
 }
 
 android {
+
     namespace = "com.example.travelapp"
     compileSdk = 34
 
@@ -51,6 +56,21 @@ android {
         }
     }
 }
+secrets {
+    // Optionally specify a different file name containing your secrets.
+    // The plugin defaults to "local.properties"
+    propertiesFileName = "secrets.properties"
+
+    // A properties file containing default secret values. This file can be
+    // checked in version control.
+    defaultPropertiesFileName = "local.properties"
+
+    // Configure which keys should be ignored by the plugin by providing regular expressions.
+    // "sdk.dir" is ignored by default.
+    ignoreList.add("keyToIgnore") // Ignore the key "keyToIgnore"
+    ignoreList.add("sdk.*")       // Ignore all keys matching the regexp "sdk.*"
+}
+
 
 dependencies {
 
@@ -62,6 +82,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.play.services.places)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -79,6 +100,10 @@ dependencies {
 
     implementation ("com.google.code.gson:gson:2.11.0")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    //  maps
+    implementation (libs.maps.compose)
+    implementation (libs.play.services.maps)
+
 
 }
 
