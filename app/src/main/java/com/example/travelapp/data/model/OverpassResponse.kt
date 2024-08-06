@@ -7,7 +7,6 @@ data class OverpassResponse(
     @SerializedName("elements") val elements: List<Element>
 )
 
-
 data class Element(
     @SerializedName("type") val type: String,
     @SerializedName("id") val id: Long,
