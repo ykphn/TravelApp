@@ -55,6 +55,8 @@ class LocationManagerRepository(
                     emit(ScreenState.Error(message = "", boolean = false))
 
                 }
+            }else{
+                emit(ScreenState.Error(message = "", boolean = false))
             }
         }
     }
