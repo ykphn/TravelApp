@@ -1,10 +1,11 @@
 package com.example.travelapp.di
 
 import android.app.Application
-import android.content.Context
 import com.example.travelapp.data.location.api.LocationManager
 import com.example.travelapp.data.location.repository.LocationManagerRepository
+import com.example.travelapp.data.remote.query.OverpassBuildQuery
 import com.example.travelapp.data.remote.api.OverpassApi
+import com.example.travelapp.data.remote.query.OverpassQueryProviderFactory
 import com.example.travelapp.data.remote.repository.OverpassRepository
 import com.example.travelapp.data.remote.repository.OverpassRepositoryImp
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -53,5 +54,18 @@ object NetworkModule {
     @Singleton
     fun provideLocationManagerRepository(context: Application, fusedLocationClient: FusedLocationProviderClient): LocationManager {
         return LocationManagerRepository(context, fusedLocationClient)
+    }
+
+    @Provides
+    @Singleton
+    fun provideOverpassBuildQuery(): OverpassBuildQuery {
+        return OverpassBuildQuery()
+    }
+
+    @Provides
+    fun provideOverpassQueryProviderFactory(
+        overpassBuildQuery: OverpassBuildQuery
+    ): OverpassQueryProviderFactory {
+        return OverpassQueryProviderFactory(overpassBuildQuery)
     }
 }
