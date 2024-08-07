@@ -12,23 +12,13 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     @Inject
     lateinit var overpassRepository: OverpassRepository
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
-
-       
-
         setContent {
             TravelAppTheme {
-
-
                 MapScreen()
             }
         }

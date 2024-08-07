@@ -18,9 +18,7 @@ import androidx.compose.ui.window.Dialog
 @Composable
 fun PermissionDialog(
     permissionTextProvider: PermissionTextProvider,
-    isPermanentlyDeclined: Boolean,
     onDismiss: () -> Unit,
-    onOkClick: () -> Unit,
     onGoToAppSettingsClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -31,21 +29,17 @@ fun PermissionDialog(
             modifier = modifier.background(color = Color.Red)
         ) {
             Text(
-                text = permissionTextProvider.getDescription(isPermanentlyDeclined),
+                text = permissionTextProvider.getDescription(true),
                 modifier = Modifier.padding(16.dp),
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Normal
             )
             Text(
-                text = if(isPermanentlyDeclined) "OK"  else "Go to app settings" ,
+                text =  "Go to app settings" ,
                 modifier = Modifier
                     .padding(16.dp)
                     .clickable {
-                        if (isPermanentlyDeclined) {
-                            onGoToAppSettingsClick()
-                        } else {
-                            onOkClick()
-                        }
+                        onGoToAppSettingsClick()
                     },
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold
