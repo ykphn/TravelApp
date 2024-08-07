@@ -6,7 +6,7 @@ sealed class ScreenState<T>(
 ) {
     class Loading<T> : ScreenState<T>()
     class Success<T>(data: T) : ScreenState<T>(data)
-    class Error<T>(message: String, data: T? = null) : ScreenState<T>(data, message)
+    class Error<T>(message: String, data: T? = null,boolean: Boolean) : ScreenState<T>(data, message)
 
 
 }

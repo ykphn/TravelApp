@@ -1,4 +1,4 @@
-package com.example.travelapp.ui.presentation.viewModel
+package com.example.travelapp.ui.presentation.home.viewModel
 
 import android.location.Location
 import androidx.lifecycle.ViewModel
@@ -25,6 +25,26 @@ class HomeScreenViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow<Boolean>(false)
     val isLoading = _isLoading.asStateFlow()
 
+
+    private val _visibleDialogQueue = MutableStateFlow<List<String>>(emptyList())
+    val visibleDialogQueue = _visibleDialogQueue.asStateFlow()
+
+    fun dismissDialog() {
+
+        _visibleDialogQueue.update { it.dropLast(1) }
+    }
+
+    fun onPermissionResult(permission: String, isGranted: Boolean) {
+        if (!isGranted) {
+            _visibleDialogQueue.update { queue ->
+                if (!queue.contains(permission)) queue + permission else queue
+            }
+        }
+    }
+
+    private val _isPermissionGranted = MutableStateFlow<Boolean>(false)
+    val isPermissionGranted = _isPermissionGranted.asStateFlow()
+
     init {
 
         getLastLocation()
@@ -39,7 +59,7 @@ class HomeScreenViewModel @Inject constructor(
                 when (state) {
 
 
-                    is ScreenState.Error -> println("hata var")
+                    is ScreenState.Error -> _isPermissionGranted.update { false }
                     is ScreenState.Loading -> _isLoading.update { true }
                     is ScreenState.Success -> {
 
@@ -58,7 +78,7 @@ class HomeScreenViewModel @Inject constructor(
 
             locationManager.getLastLocation().collectLatest { state ->
                 when (state) {
-                    is ScreenState.Error -> println("hatavar")
+                    is ScreenState.Error -> _isPermissionGranted.update { false }
                     is ScreenState.Loading -> _isLoading.update { true }
                     is ScreenState.Success -> {
 
