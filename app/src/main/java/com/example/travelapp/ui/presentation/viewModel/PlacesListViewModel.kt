@@ -4,8 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.travelapp.data.model.OverpassResponse
-import com.example.travelapp.data.remote.query.OverpassBuildQuery
-import com.example.travelapp.data.remote.query.OverpassQueryProvider
 import com.example.travelapp.data.remote.query.OverpassQueryProviderFactory
 import com.example.travelapp.data.remote.repository.OverpassRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
