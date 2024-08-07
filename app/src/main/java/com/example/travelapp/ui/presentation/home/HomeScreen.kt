@@ -40,6 +40,7 @@ import com.example.travelapp.ui.component.PermissionTextProvider
 import com.example.travelapp.ui.presentation.home.viewModel.HomeScreenViewModel
 import com.example.travelapp.utility.getActivityOrNull
 import com.example.travelapp.utility.hasLocationPermission
+import com.example.travelapp.utility.openAppSettings
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -91,7 +92,9 @@ fun MapScreen(
     )
     LaunchedEffect(Unit) {
         multiplePermissions.launch(permissionsToRequest)
+
     }
+
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
@@ -100,6 +103,7 @@ fun MapScreen(
                     if (context.hasLocationPermission()) {
                         dialogQueue.forEach{ _ ->
                             viewModel.dismissDialog()
+
                         }
                         println("deneme")
                     }else if (!context.hasLocationPermission()){
@@ -131,7 +135,6 @@ fun MapScreen(
         )
     }
 
-
     LaunchedEffect(key1 = isLoading, key2 = location) {
         location?.let {
             cameraPositionState.animate(
@@ -141,6 +144,7 @@ fun MapScreen(
             )
 
         }
+
     }
 
 
@@ -151,6 +155,7 @@ fun MapScreen(
         ) {
             CircularProgressIndicator()
         }
+
 
     } else {
         Scaffold(
@@ -192,11 +197,6 @@ fun MapScreen(
 
 }
 
-fun Activity.openAppSettings() {
-    Intent(
-        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-        Uri.fromParts("package", packageName, null)
-    ).also(::startActivity)
-}
+
 
 

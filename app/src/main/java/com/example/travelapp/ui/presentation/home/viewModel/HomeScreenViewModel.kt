@@ -22,6 +22,7 @@ class HomeScreenViewModel @Inject constructor(
 
     private val _isFirstLoading = MutableStateFlow<Boolean>(true)
     val isFirstLoading = _isFirstLoading.asStateFlow()
+
     private val _isLoading = MutableStateFlow<Boolean>(false)
     val isLoading = _isLoading.asStateFlow()
 
@@ -48,8 +49,6 @@ class HomeScreenViewModel @Inject constructor(
     init {
 
         getLastLocation()
-
-
     }
 
     fun getCurrentLocation() {
@@ -64,8 +63,10 @@ class HomeScreenViewModel @Inject constructor(
                     is ScreenState.Success -> {
 
                         println(state.data)
+
                         _location.update { state.data }
                         _isLoading.update { false }
+                        _isFirstLoading.update { false }
 
                     }
                 }
@@ -73,19 +74,29 @@ class HomeScreenViewModel @Inject constructor(
         }
     }
 
-    private fun getLastLocation() {
+    fun getLastLocation() {
         viewModelScope.launch {
 
             locationManager.getLastLocation().collectLatest { state ->
                 when (state) {
-                    is ScreenState.Error -> _isPermissionGranted.update { false }
-                    is ScreenState.Loading -> _isLoading.update { true }
+                    is ScreenState.Error -> {
+                        _isPermissionGranted.update { false }
+                        _isFirstLoading.update { false }
+                    }
+
+                    is ScreenState.Loading -> {
+
+                        _isLoading.update { true }
+
+                    }
+
                     is ScreenState.Success -> {
 
-                        println(" ${state.data}  ****")
+
                         _location.update { state.data }
                         _isLoading.update { false }
                         _isFirstLoading.update { false }
+                        println(" ${_isFirstLoading.value}  ****")
 
                     }
 
