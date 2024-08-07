@@ -34,8 +34,10 @@ class LocationManagerRepository(
                      val location = locationTask.await()
                      emit(ScreenState.Success(location))
                 } catch (e: SecurityException) {
-                     emit(ScreenState.Error("Location permission is not granted"))
+                    emit(ScreenState.Error(message = "", boolean = false))
                 }
+           }else{
+                emit(ScreenState.Error(message = "", boolean = false))
            }
        }
 
@@ -50,7 +52,8 @@ class LocationManagerRepository(
                     val location = locationTask.await()
                     emit(ScreenState.Success(location))
                 } catch (e: SecurityException) {
-                    emit(ScreenState.Error("Location permission is not granted",))
+                    emit(ScreenState.Error(message = "", boolean = false))
+
                 }
             }
         }
