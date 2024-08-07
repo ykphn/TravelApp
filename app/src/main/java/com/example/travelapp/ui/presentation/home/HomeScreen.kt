@@ -91,7 +91,12 @@ fun MapScreen(
         }
     )
     LaunchedEffect(Unit) {
-        multiplePermissions.launch(permissionsToRequest)
+       if (!context.hasLocationPermission()) {
+           multiplePermissions.launch(permissionsToRequest)
+           println("*********22222")
+
+        }
+
 
     }
 
@@ -107,7 +112,10 @@ fun MapScreen(
                         }
                         println("deneme")
                     }else if (!context.hasLocationPermission()){
-                        multiplePermissions.launch(permissionsToRequest)
+                        if (!shouldShowRequestPermissionRationale(context as Activity, Manifest.permission.ACCESS_FINE_LOCATION)) {
+                            multiplePermissions.launch(permissionsToRequest)
+
+                        }
                     }
 
                 }
