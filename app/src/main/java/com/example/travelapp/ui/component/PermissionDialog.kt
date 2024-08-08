@@ -1,21 +1,10 @@
 package com.example.travelapp.ui.component
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Divider
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-
 
 @Composable
 fun PermissionDialog(
@@ -25,30 +14,22 @@ fun PermissionDialog(
     modifier: Modifier = Modifier
 ) {
 
-
-    Dialog(onDismissRequest = onDismiss) {
-        Column(
-            modifier = modifier.background(color = Color.Red)
-        ) {
-            Text(
-                text = permissionTextProvider.getDescription(true),
-                modifier = Modifier.padding(16.dp),
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Normal
-            )
-            Text(
-                text =  "Go to app settings" ,
-                modifier = Modifier
-                    .padding(16.dp)
-                    .clickable {
-                        onGoToAppSettingsClick()
-                    },
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold
-            )
+    AlertDialog(
+        onDismissRequest = {
+            onDismiss()
+        },
+        title = { Text("Location Permission Required") },
+        text = {
+            Text(permissionTextProvider.getDescription(true))
+        },
+        confirmButton = {
+            Button(onClick = {
+                onGoToAppSettingsClick()
+            }) {
+                Text("Go to app settings")
+            }
         }
-
-    }
+    )
 }
 
 interface PermissionTextProvider {
@@ -58,23 +39,10 @@ interface PermissionTextProvider {
 class LocationCoarsePermissionTextProvider : PermissionTextProvider {
     override fun getDescription(isPermanentlyDeclined: Boolean): String {
         return if (isPermanentlyDeclined) {
-            "It seems you permanently declined camera permission. " +
+            "It seems you permanently declined location permission. " +
                     "You can go to the app settings to grant it."
         } else {
-            "This app needs access to your camera so that your friends " +
-                    "can see you in a call."
-        }
-    }
-}
-
-class LocationFinePermissionTextProvider : PermissionTextProvider {
-    override fun getDescription(isPermanentlyDeclined: Boolean): String {
-        return if (isPermanentlyDeclined) {
-            "It seems you permanently declined microphone permission. " +
-                    "You can go to the app settings to grant it."
-        } else {
-            "This app needs access to your microphone so that your friends " +
-                    "can hear you in a call."
+            "This app needs access to your location for proper functionality."
         }
     }
 }
