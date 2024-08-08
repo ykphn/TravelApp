@@ -17,6 +17,8 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -62,6 +64,10 @@ fun MapScreen(
     val dialogQueue by viewModel.visibleDialogQueue.collectAsState()
     val context = LocalContext.current
 
+    var checkPermissionOneTime = remember {
+        mutableStateOf(true)
+    }
+
     val latLng = LatLng(location.let { loc -> loc?.latitude } ?: 0.0,
         location.let { it?.longitude } ?: 0.0
     )
@@ -81,34 +87,44 @@ fun MapScreen(
             }
         }
     )
-    LaunchedEffect(Unit) {
-        if (!context.hasLocationPermission()) {
-            multiplePermissions.launch(permissionsToRequest)
 
 
-        }
+    ObserverLifecycleEvent(
+        lifecycleOwner = lifecycleOwner,
+        onResumeEvent = {
+            if (context.hasLocationPermission()) {
+                dialogQueue.forEach { _ ->
+                    viewModel.dismissDialog()
 
-
-    }
-
-    ObserverLifecycleEvent(lifecycleOwner = lifecycleOwner, onResumeEvent = {
-        if (context.hasLocationPermission()) {
-            dialogQueue.forEach { _ ->
-                viewModel.dismissDialog()
+                }
 
             }
+        }, onStartEvent = {
+            if (!context.hasLocationPermission()) {
+                if (!shouldShowRequestPermissionRationale(
+                        context as Activity,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                    ) && !shouldShowRequestPermissionRationale(
+                        context,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    )) {
+                    multiplePermissions.launch(permissionsToRequest)
 
-        } else if (!context.hasLocationPermission()) {
-            if (!shouldShowRequestPermissionRationale(
-                    context as Activity,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                )
-            ) {
+
+
+                }
+            }
+
+        },
+
+        onCreateEvent = {
+            if (!context.hasLocationPermission()) {
                 multiplePermissions.launch(permissionsToRequest)
 
+
             }
-        }
-    })
+        },
+    )
 
 
     dialogQueue.forEach { perms ->
