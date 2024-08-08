@@ -1,6 +1,7 @@
 package com.example.travelapp.ui.presentation.home.viewModel
 
 import android.location.Location
+import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.travelapp.data.location.api.LocationManager
@@ -53,6 +54,7 @@ class HomeScreenViewModel @Inject constructor(
 
     fun getCurrentLocation() {
         viewModelScope.launch {
+
 
             locationManager.getCurrentLocation().collectLatest { state ->
                 when (state) {
