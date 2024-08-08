@@ -1,6 +1,5 @@
-package com.example.travelapp.ui.presentation
+package com.example.travelapp.ui.presentation.places
 
-import com.example.travelapp.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.example.travelapp.ui.presentation.viewModel.PlacesListViewModel
+import com.example.travelapp.ui.presentation.places.viewModel.PlacesListViewModel
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.travelapp.data.model.Element
 
@@ -27,7 +26,7 @@ fun PlacesListScreen(
     val places by viewModel.places.collectAsState()
     LazyColumn(modifier = modifier.fillMaxSize()) {
         items(places.elements) { response ->
-            ListItem(response = response, imagePainter = painterResource(id = R.drawable.icon_museum))
+            ListItem(response = response, imagePainter = painterResource(id = places.icon!!))
         }
     }
 }

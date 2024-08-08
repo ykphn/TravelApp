@@ -4,7 +4,8 @@ import com.google.gson.annotations.SerializedName
 
 
 data class OverpassResponse(
-    @SerializedName("elements") val elements: List<Element>
+    @SerializedName("elements") val elements: List<Element>,
+    var icon: Int?
 )
 
 data class Element(

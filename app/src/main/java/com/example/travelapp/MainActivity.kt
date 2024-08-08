@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 
 import com.example.travelapp.data.remote.repository.OverpassRepository
 import com.example.travelapp.ui.presentation.home.MapScreen
+import com.example.travelapp.ui.presentation.places.PlacesListScreen
 import com.example.travelapp.ui.theme.TravelAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -20,6 +21,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             TravelAppTheme {
                 MapScreen()
+                //PlacesListScreen()
             }
         }
     }

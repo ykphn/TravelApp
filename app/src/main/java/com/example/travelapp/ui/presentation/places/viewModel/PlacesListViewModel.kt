@@ -1,8 +1,10 @@
-package com.example.travelapp.ui.presentation.viewModel
+package com.example.travelapp.ui.presentation.places.viewModel
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.travelapp.R
+import com.example.travelapp.data.model.OverpassQueryResponse
 import com.example.travelapp.data.model.OverpassResponse
 import com.example.travelapp.data.remote.query.OverpassQueryProviderFactory
 import com.example.travelapp.data.remote.repository.OverpassRepository
@@ -20,7 +22,7 @@ class PlacesListViewModel @Inject constructor(
     private val overpassQueryProviderFactory: OverpassQueryProviderFactory
 ) : ViewModel() {
 
-    private val _places = MutableStateFlow(OverpassResponse(elements = emptyList()))
+    private val _places = MutableStateFlow(OverpassResponse(elements = emptyList(), icon = null))
     val places: StateFlow<OverpassResponse> = _places
 
     init {
@@ -32,15 +34,9 @@ class PlacesListViewModel @Inject constructor(
         fetchPlaces(overpassQueryProvider.getQueryHistoric())
     }
 
-    private fun fetchPlaces(query: String) {
+    private fun fetchPlaces(queryResponse: OverpassQueryResponse) {
         viewModelScope.launch {
-            overpassRepository.getPlaces(query)
-                .onStart {
-                    Log.d("PlacesListViewModel", "Fetching data...")
-                }
-                .catch { e ->
-                    Log.e("PlacesListViewModel", "Error fetching data", e)
-                }
+            overpassRepository.getPlaces(queryResponse.query)
                 .collect { response ->
                     Log.d("PlacesListViewModel", "Response received: $response")
                     if (response.elements.isEmpty()) {
@@ -51,6 +47,7 @@ class PlacesListViewModel @Inject constructor(
                         }
                     }
                     _places.value = response
+                    _places.value.icon = queryResponse.image
                 }
         }
     }
