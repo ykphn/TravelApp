@@ -16,7 +16,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PlacesListViewModel @Inject constructor(
     private val overpassRepository: OverpassRepository,
-    private val overpassQueryProviderFactory: OverpassQueryProviderFactory
+    overpassQueryProviderFactory: OverpassQueryProviderFactory
 ) : ViewModel() {
 
     private val _tourismPlaces = MutableStateFlow(OverpassResponse(elements = emptyList(), icon = null))
@@ -27,6 +27,13 @@ class PlacesListViewModel @Inject constructor(
 
     private val _museumAndArcPlaces = MutableStateFlow(OverpassResponse(elements = emptyList(), icon = null))
     val museumAndArcPlaces: StateFlow<OverpassResponse> = _museumAndArcPlaces
+
+    private val _placesType = MutableStateFlow("tourismPlaces")
+    val placesType: StateFlow<String> get() = _placesType
+
+    fun setPlacesType(type: String) {
+        _placesType.value = type
+    }
 
     init {
         val latitude = 39.9234
