@@ -1,6 +1,6 @@
 package com.example.travelapp.data.remote.query
 
-import com.example.travelapp.R
+import com.example.travelapp.data.model.Icon
 import com.example.travelapp.data.model.OverpassQueryResponse
 import javax.inject.Inject
 
@@ -19,7 +19,7 @@ class OverpassQueryProvider @Inject constructor(
         return OverpassQueryResponse(buildQuery(
             "tourism" to "museum",
             "historic" to "archaeological_site"
-        ), R.drawable.icon_museum)
+        ), Icon.museum)
     }
 
     override fun getQueryHistoric(): OverpassQueryResponse {
@@ -27,12 +27,12 @@ class OverpassQueryProvider @Inject constructor(
             "historic" to "ruins",
             "historic" to "monument",
             "historic" to "memorial"
-        ), R.drawable.icon_historic)
+        ), Icon.historic)
     }
 
     override fun getQueryTourism(): OverpassQueryResponse {
         return OverpassQueryResponse(buildQuery(
             "tourism" to "attraction"
-        ),R.drawable.icon_tourism)
+        ), Icon.tourism)
     }
 }

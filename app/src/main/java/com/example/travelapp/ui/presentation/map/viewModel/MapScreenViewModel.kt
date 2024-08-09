@@ -1,7 +1,6 @@
-package com.example.travelapp.ui.presentation.home.viewModel
+package com.example.travelapp.ui.presentation.map.viewModel
 
 import android.location.Location
-import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.travelapp.data.location.api.LocationManager
@@ -15,7 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeScreenViewModel @Inject constructor(
+class MapScreenViewModel @Inject constructor(
     private val locationManager: LocationManager
 ) : ViewModel() {
     private val _location = MutableStateFlow<Location?>(null)

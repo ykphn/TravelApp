@@ -1,4 +1,4 @@
-package com.example.travelapp.ui.presentation.home
+package com.example.travelapp.ui.presentation.map
 
 import android.Manifest
 import android.app.Activity
@@ -30,7 +30,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import com.example.travelapp.ui.component.LocationCoarsePermissionTextProvider
 import com.example.travelapp.ui.component.PermissionDialog
-import com.example.travelapp.ui.presentation.home.viewModel.HomeScreenViewModel
+import com.example.travelapp.ui.presentation.map.viewModel.MapScreenViewModel
 import com.example.travelapp.utility.getActivityOrNull
 import com.example.travelapp.utility.hasLocationPermission
 import com.example.travelapp.utility.openAppSettings
@@ -51,7 +51,7 @@ private val permissionsToRequest = arrayOf(
 @Composable
 fun MapScreen(
     modifier: Modifier = Modifier,
-    viewModel: HomeScreenViewModel = hiltViewModel(),
+    viewModel: MapScreenViewModel = hiltViewModel(),
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
 
 ) {
