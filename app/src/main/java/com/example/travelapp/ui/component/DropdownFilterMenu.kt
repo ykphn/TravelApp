@@ -46,7 +46,7 @@ fun DropdownFilterMenu(modifier: Modifier = Modifier, type: String ,onSelect : (
             Row(
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(top = 8.dp, end = 80.dp, bottom = 0.dp, start = 16.dp)
+                    .padding(top = 72.dp, end = 80.dp, bottom = 0.dp, start = 16.dp)
                     .height(32.dp)
                     .background(
                         Color(0xFF000000),
@@ -123,7 +123,8 @@ fun DropdownFilterMenu(modifier: Modifier = Modifier, type: String ,onSelect : (
                 }
             }
 
-            Column {
+            Column (modifier.background(color = Color(0xFFF0F0F0)))
+            {
                 Text(
                     modifier = modifier.padding(top = 8.dp, end = 0.dp, bottom = 0.dp ,start = 24.dp),
                     text = "Distance Value: ${sliderPosition.intValue}",

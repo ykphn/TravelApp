@@ -47,7 +47,7 @@ fun CustomSearchBar(
         },
         placeholder = { Text("Venues...", style = MaterialTheme.typography.titleMedium) },
         shape = RoundedCornerShape(16.dp),
-        modifier = modifier.padding(16.dp)
+        modifier = modifier.padding(top = 72.dp, end = 24.dp, start = 24.dp, )
 
     ) {
 

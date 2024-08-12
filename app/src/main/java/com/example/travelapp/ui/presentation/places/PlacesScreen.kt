@@ -63,6 +63,16 @@ fun PlacesListScreen(
         .fillMaxSize()
     ) {
 
+        LazyColumn(modifier = modifier
+            .fillMaxSize()
+            .padding(top = 100.dp)) {
+            items(places.value.elements) { response ->
+                if (!response.tags?.get("name").isNullOrEmpty()) ListItem(response = response,
+                    imagePainter = painterResource(id = places.value.icon!!),
+                    selectedPlaces)
+            }
+        }
+
         if (dropdownMenu.value)  {
             DropdownFilterMenu( type = placesType,onSelect = { type ->
                 viewModel.setPlacesType(type)
@@ -76,7 +86,7 @@ fun PlacesListScreen(
 
         Box(modifier = modifier
             .fillMaxWidth()
-            .padding(top = 8.dp, end = 16.dp)
+            .padding(top = 72.dp, end = 16.dp)
             .height(32.dp),
         contentAlignment = Alignment.CenterEnd
         ) {
@@ -103,15 +113,6 @@ fun PlacesListScreen(
         }
 
 
-        LazyColumn(modifier = modifier
-            .fillMaxSize()
-            .padding(top = 144.dp)) {
-            items(places.value.elements) { response ->
-                if (!response.tags?.get("name").isNullOrEmpty()) ListItem(response = response,
-                    imagePainter = painterResource(id = places.value.icon!!),
-                    selectedPlaces)
-            }
-        }
 
     }
 

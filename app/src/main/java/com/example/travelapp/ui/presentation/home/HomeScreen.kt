@@ -32,9 +32,11 @@ fun MainScreen() {
 
         Crossfade(targetState = selectedButton.value, label = "Screen Changer") { screen ->
             when (screen) {
-                "Map" -> MapScreen( selectedPlaces = selectedData ,userLocalRollBack = { data ->
+                "Map" ->{ MapScreen( selectedPlaces = selectedData ,userLocalRollBack = { data ->
                     userLocal.value = data
                 })
+
+                }
                 "List" -> PlacesListScreen( userLocal = userLocal, selectedPlaces = { data ->
                     selectedData.value = data
                 } )
@@ -45,7 +47,7 @@ fun MainScreen() {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 108.dp, start = 16.dp, end = 16.dp)
+                .padding(top = 16.dp, start = 16.dp, end = 16.dp)
                 .height(48.dp)
                 .background(
                     Color(0xFFFFFFFF),
