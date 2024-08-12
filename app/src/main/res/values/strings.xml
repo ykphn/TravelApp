@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">TravelApp</string>
-    
+    <string name="google_maps_key">AIzaSyANZtuMa-dcfsjCa-ncsh4oH54L9F1dslw</string>
 </resources>

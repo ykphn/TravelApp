@@ -38,10 +38,11 @@ fun MainScreen() {
             }
         }
 
+
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 48.dp, start = 16.dp, end = 16.dp)
+                .padding(top = 96.dp, start = 16.dp, end = 16.dp)
                 .height(48.dp)
                 .background(
                     Color(0xFFFFFFFF),

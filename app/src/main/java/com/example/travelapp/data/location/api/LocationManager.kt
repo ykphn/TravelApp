@@ -9,4 +9,6 @@ interface LocationManager {
 
     suspend fun getCurrentLocation() : Flow<ScreenState<Location?>>
     suspend fun getLastLocation() : Flow<ScreenState<Location?>>
+
+
 }
