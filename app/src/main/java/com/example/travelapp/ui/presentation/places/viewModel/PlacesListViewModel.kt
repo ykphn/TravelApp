@@ -1,12 +1,14 @@
 package com.example.travelapp.ui.presentation.places.viewModel
 
 import android.util.Log
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.travelapp.data.model.OverpassQueryResponse
 import com.example.travelapp.data.model.OverpassResponse
 import com.example.travelapp.data.remote.query.OverpassQueryProviderFactory
 import com.example.travelapp.data.remote.repository.OverpassRepository
+import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +18,7 @@ import javax.inject.Inject
 @HiltViewModel
 class PlacesListViewModel @Inject constructor(
     private val overpassRepository: OverpassRepository,
-    overpassQueryProviderFactory: OverpassQueryProviderFactory
+    private val overpassQueryProviderFactory: OverpassQueryProviderFactory
 ) : ViewModel() {
 
     private val _tourismPlaces = MutableStateFlow(OverpassResponse(elements = emptyList(), icon = null))
@@ -35,10 +37,10 @@ class PlacesListViewModel @Inject constructor(
         _placesType.value = type
     }
 
-    init {
-        val latitude = 39.9234
-        val longitude = 32.8597
-        val distance = 5000
+    fun userLocalPlaces(userLocal: MutableState<LatLng>) {
+        val latitude = userLocal.value.latitude
+        val longitude = userLocal.value.longitude
+        val distance = 50000
 
         val overpassQueryProvider = overpassQueryProviderFactory.create(latitude, longitude, distance)
         fetchPlaces(_tourismPlaces, overpassQueryProvider.getQueryTourism())

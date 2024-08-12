@@ -16,10 +16,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.travelapp.ui.presentation.map.MapScreen
 import com.example.travelapp.ui.presentation.places.PlacesListScreen
+import com.google.android.gms.maps.model.LatLng
 
 @Composable
 fun MainScreen() {
     val selectedButton = remember { mutableStateOf("Map") }
+    val userLocal = remember { mutableStateOf(LatLng(0.0, 0.0)) }
 
     Box(
         modifier = Modifier
@@ -29,8 +31,10 @@ fun MainScreen() {
 
         Crossfade(targetState = selectedButton.value, label = "Screen Changer") { screen ->
             when (screen) {
-                "Map" -> MapScreen()
-                "List" -> PlacesListScreen()
+                "Map" -> MapScreen( userLocalRollBack = { data ->
+                    userLocal.value = data
+                })
+                "List" -> PlacesListScreen( userLocal = userLocal )
             }
         }
 

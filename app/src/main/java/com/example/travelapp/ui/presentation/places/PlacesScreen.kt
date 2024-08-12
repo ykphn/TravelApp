@@ -1,5 +1,6 @@
 package com.example.travelapp.ui.presentation.places
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -26,11 +28,13 @@ import com.example.travelapp.ui.presentation.places.viewModel.PlacesListViewMode
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.travelapp.data.model.Element
 import com.example.travelapp.ui.component.DropdownFilterMenu
+import com.google.android.gms.maps.model.LatLng
 
 @Composable
 fun PlacesListScreen(
     modifier: Modifier = Modifier,
-    viewModel: PlacesListViewModel = hiltViewModel()
+    viewModel: PlacesListViewModel = hiltViewModel(),
+    userLocal: MutableState<LatLng>
 ) {
     val tourismPlaces by viewModel.tourismPlaces.collectAsState()
     val historicPlaces by viewModel.historicPlaces.collectAsState()
@@ -47,7 +51,11 @@ fun PlacesListScreen(
             "historicPlaces" -> places.value = historicPlaces
             "museumAndArcPlaces" -> places.value = museumAndArcPlaces
         }
+    }
 
+    LaunchedEffect(userLocal) {
+        Log.d("PlacesListViewModel", "$userLocal")
+        viewModel.userLocalPlaces(userLocal)
     }
 
     Box(modifier = modifier

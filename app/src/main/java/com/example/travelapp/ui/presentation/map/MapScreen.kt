@@ -54,8 +54,8 @@ private val permissionsToRequest = arrayOf(
 fun MapScreen(
     modifier: Modifier = Modifier,
     viewModel: MapScreenViewModel = hiltViewModel(),
-    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current
-
+    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
+    userLocalRollBack: (LatLng) -> Unit
 ) {
 
 
@@ -150,7 +150,7 @@ fun MapScreen(
                     CameraPosition.fromLatLngZoom(latLng, 10f)
                 ), 1000
             )
-
+            userLocalRollBack(latLng)
         }
 
     }
