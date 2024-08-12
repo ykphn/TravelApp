@@ -6,9 +6,7 @@ import android.content.ContextWrapper
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 
-
-fun Context.hasLocationPermission() : Boolean {
-
+fun Context.hasLocationPermission(): Boolean {
     return ContextCompat.checkSelfPermission(
         this,
         android.Manifest.permission.ACCESS_FINE_LOCATION
@@ -17,12 +15,12 @@ fun Context.hasLocationPermission() : Boolean {
         android.Manifest.permission.ACCESS_COARSE_LOCATION
     ) == PackageManager.PERMISSION_GRANTED
 }
+
 fun Context.getActivityOrNull(): Activity? {
     var context = this
     while (context is ContextWrapper) {
         if (context is Activity) return context
         context = context.baseContext
     }
-
     return null
 }

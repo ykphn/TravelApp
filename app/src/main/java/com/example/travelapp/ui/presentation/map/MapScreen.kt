@@ -2,7 +2,6 @@ package com.example.travelapp.ui.presentation.map
 
 import android.Manifest
 import android.app.Activity
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
@@ -60,7 +59,6 @@ fun MapScreen(
     val location by viewModel.location.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val isFirstLoading by viewModel.isFirstLoading.collectAsState()
-    val isPermissionGranted by viewModel.isPermissionGranted.collectAsState()
     val dialogQueue by viewModel.visibleDialogQueue.collectAsState()
     val context = LocalContext.current
     val searchText by viewModel.searchText.collectAsState()

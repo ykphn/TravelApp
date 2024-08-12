@@ -21,13 +21,16 @@ class PlacesListViewModel @Inject constructor(
     private val overpassQueryProviderFactory: OverpassQueryProviderFactory
 ) : ViewModel() {
 
-    private val _tourismPlaces = MutableStateFlow(OverpassResponse(elements = emptyList(), icon = null))
+    private val _tourismPlaces =
+        MutableStateFlow(OverpassResponse(elements = emptyList(), icon = null))
     val tourismPlaces: StateFlow<OverpassResponse> = _tourismPlaces
 
-    private val _historicPlaces = MutableStateFlow(OverpassResponse(elements = emptyList(), icon = null))
+    private val _historicPlaces =
+        MutableStateFlow(OverpassResponse(elements = emptyList(), icon = null))
     val historicPlaces: StateFlow<OverpassResponse> = _historicPlaces
 
-    private val _museumAndArcPlaces = MutableStateFlow(OverpassResponse(elements = emptyList(), icon = null))
+    private val _museumAndArcPlaces =
+        MutableStateFlow(OverpassResponse(elements = emptyList(), icon = null))
     val museumAndArcPlaces: StateFlow<OverpassResponse> = _museumAndArcPlaces
 
     private val _placesType = MutableStateFlow("tourismPlaces")
@@ -48,13 +51,17 @@ class PlacesListViewModel @Inject constructor(
         val latitude = userLocal.value.latitude
         val longitude = userLocal.value.longitude
 
-        val overpassQueryProvider = overpassQueryProviderFactory.create(latitude, longitude, distance.value)
+        val overpassQueryProvider =
+            overpassQueryProviderFactory.create(latitude, longitude, distance.value)
         fetchPlaces(_tourismPlaces, overpassQueryProvider.getQueryTourism())
         fetchPlaces(_historicPlaces, overpassQueryProvider.getQueryHistoric())
         fetchPlaces(_museumAndArcPlaces, overpassQueryProvider.getQueryMuseumAndArchaeological())
     }
 
-    private fun fetchPlaces(places: MutableStateFlow<OverpassResponse>, queryResponse: OverpassQueryResponse) {
+    private fun fetchPlaces(
+        places: MutableStateFlow<OverpassResponse>,
+        queryResponse: OverpassQueryResponse
+    ) {
         viewModelScope.launch {
             overpassRepository.getPlaces(queryResponse.query)
                 .collect { response ->
@@ -71,4 +78,5 @@ class PlacesListViewModel @Inject constructor(
                 }
         }
     }
+
 }

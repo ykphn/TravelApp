@@ -1,6 +1,5 @@
 package com.example.travelapp.ui.component
 
-
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.android.libraries.places.api.model.Place
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomSearchBar(
@@ -31,7 +29,7 @@ fun CustomSearchBar(
     searchText: String,
     placeList: List<Place>?
 ) {
-    val viewModel :SearchViewModel = hiltViewModel()
+    val viewModel: SearchViewModel = hiltViewModel()
 
     SearchBar(
         query = searchText,
@@ -41,29 +39,25 @@ fun CustomSearchBar(
         onActiveChange = onActiveChange,
         leadingIcon = {
             Icon(imageVector = Icons.Default.Search,
-                contentDescription ="SearchIcon" , modifier = Modifier.clickable {
+                contentDescription = "SearchIcon", modifier = Modifier.clickable {
                     viewModel.getPlaces()
                 })
         },
         placeholder = { Text("Venues...", style = MaterialTheme.typography.titleMedium) },
         shape = RoundedCornerShape(16.dp),
-        modifier = modifier.padding(top = 72.dp, end = 24.dp, start = 24.dp, )
+        modifier = modifier.padding(top = 72.dp, end = 24.dp, start = 24.dp)
 
     ) {
 
-        placeList?.let { idx->
-            idx.forEach{ response ->
+        placeList?.let { idx ->
+            idx.forEach { response ->
                 Card {
                     response.name?.let { Text(text = it) }
                 }
             }
         }
-
     }
-
 }
-
-
 
 enum class SearchBarState {
     SEARCH_IN_MAP,

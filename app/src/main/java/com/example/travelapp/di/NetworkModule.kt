@@ -84,11 +84,12 @@ object NetworkModule {
             context.getString(R.string.google_maps_key)
         )
         return Places.createClient(context)
-
     }
+
     @Provides
     @Singleton
     fun provideMapsRepository(placesClient: PlacesClient): MapsRepository {
         return MapsRepositoryImpl(placesClient)
     }
+
 }

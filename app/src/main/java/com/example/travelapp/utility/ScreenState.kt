@@ -1,12 +1,11 @@
 package com.example.travelapp.utility
 
 sealed class ScreenState<T>(
-    val data :T? =null,
+    val data: T? = null,
     val message: String? = null
 ) {
     class Loading<T> : ScreenState<T>()
     class Success<T>(data: T) : ScreenState<T>(data)
-    class Error<T>(message: String, data: T? = null,boolean: Boolean) : ScreenState<T>(data, message)
-
-
+    class Error<T>(message: String, data: T? = null, boolean: Boolean) :
+        ScreenState<T>(data, message)
 }

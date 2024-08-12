@@ -8,4 +8,5 @@ class OverpassQueryProviderFactory @Inject constructor(
     fun create(latitude: Double, longitude: Double, distance: Int): OverpassQueryProvider {
         return OverpassQueryProvider(latitude, longitude, distance, overpassBuildQuery)
     }
+
 }

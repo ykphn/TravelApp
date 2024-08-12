@@ -1,6 +1,5 @@
 package com.example.travelapp.ui.presentation.places
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -37,6 +36,7 @@ fun PlacesListScreen(
     userLocal: MutableState<LatLng>,
     selectedPlaces: (LatLng) -> Unit
 ) {
+
     val tourismPlaces by viewModel.tourismPlaces.collectAsState()
     val historicPlaces by viewModel.historicPlaces.collectAsState()
     val museumAndArcPlaces by viewModel.museumAndArcPlaces.collectAsState()
@@ -44,7 +44,6 @@ fun PlacesListScreen(
     val distance by viewModel.distance.collectAsState()
 
     val dropdownMenu = remember { mutableStateOf(false) }
-
     val places = remember { mutableStateOf(tourismPlaces) }
 
     LaunchedEffect(tourismPlaces, historicPlaces, museumAndArcPlaces) {
@@ -69,7 +68,6 @@ fun PlacesListScreen(
         modifier = modifier
             .fillMaxSize()
     ) {
-
         LazyColumn(
             modifier = modifier
                 .fillMaxSize()
@@ -100,8 +98,8 @@ fun PlacesListScreen(
                         places.value = museumAndArcPlaces
                     }
                 }
-            }, distance = distance ,selectDistance = { distance ->
-                    viewModel.setDistance(distance)
+            }, distance = distance, selectDistance = { distance ->
+                viewModel.setDistance(distance)
             })
         }
 
@@ -133,8 +131,6 @@ fun PlacesListScreen(
                 )
             }
         }
-
-
     }
 
 }
@@ -163,4 +159,5 @@ fun ListItem(response: Element, imagePainter: Painter, selectedPlaces: (LatLng) 
             style = MaterialTheme.typography.bodyMedium
         )
     }
+
 }

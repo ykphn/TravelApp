@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,7 +24,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.FontScaling
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -151,7 +149,7 @@ fun DropdownFilterMenu(
                         selectDistance(newValue.toInt())
                     },
                     valueRange = 500f..20000f,
-                    steps = 37,
+                    steps = 38,
                     modifier = modifier.padding(
                         top = 0.dp,
                         end = 16.dp,
@@ -159,14 +157,8 @@ fun DropdownFilterMenu(
                         start = 16.dp
                     )
                 )
-
             }
         }
-
-
     }
+
 }
-
-
-
-

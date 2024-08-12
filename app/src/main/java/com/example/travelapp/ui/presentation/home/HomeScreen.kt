@@ -1,6 +1,5 @@
 package com.example.travelapp.ui.presentation.home
 
-import android.util.Log
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,30 +20,31 @@ import com.google.android.gms.maps.model.LatLng
 
 @Composable
 fun MainScreen() {
+
     val selectedButton = remember { mutableStateOf("Map") }
     val userLocal = remember { mutableStateOf(LatLng(0.0, 0.0)) }
-    val selectedData = remember { mutableStateOf<LatLng?>(null)}
+    val selectedData = remember { mutableStateOf<LatLng?>(null) }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFF0F0F0))
     ) {
-
         Crossfade(targetState = selectedButton.value, label = "Screen Changer") { screen ->
             when (screen) {
-                "Map" ->{ MapScreen( selectedPlaces = selectedData , userLocalRollBack = { data ->
-                    userLocal.value = data
-                })
+                "Map" -> {
+                    MapScreen(selectedPlaces = selectedData, userLocalRollBack = { data ->
+                        userLocal.value = data
+                    })
 
                 }
-                "List" -> PlacesListScreen( userLocal = userLocal, selectedPlaces = { data ->
+
+                "List" -> PlacesListScreen(userLocal = userLocal, selectedPlaces = { data ->
                     selectedData.value = data
                     selectedButton.value = "Map"
-                } )
+                })
             }
         }
-
 
         Row(
             modifier = Modifier
@@ -109,10 +109,7 @@ fun MainScreen() {
                     textAlign = TextAlign.Center
                 )
             }
-
         }
     }
+
 }
-
-
-
