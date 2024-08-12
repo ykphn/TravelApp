@@ -41,6 +41,7 @@ fun PlacesListScreen(
     val historicPlaces by viewModel.historicPlaces.collectAsState()
     val museumAndArcPlaces by viewModel.museumAndArcPlaces.collectAsState()
     val placesType by viewModel.placesType.collectAsState()
+    val distance by viewModel.distance.collectAsState()
 
     val dropdownMenu = remember { mutableStateOf(false) }
 
@@ -56,6 +57,12 @@ fun PlacesListScreen(
 
     LaunchedEffect(userLocal) {
         viewModel.userLocalPlaces(userLocal)
+    }
+
+    LaunchedEffect(distance, dropdownMenu.value) {
+        if (!dropdownMenu.value) {
+            viewModel.userLocalPlaces(userLocal)
+        }
     }
 
     Box(
@@ -93,6 +100,8 @@ fun PlacesListScreen(
                         places.value = museumAndArcPlaces
                     }
                 }
+            }, distance = distance ,selectDistance = { distance ->
+                    viewModel.setDistance(distance)
             })
         }
 

@@ -33,16 +33,22 @@ class PlacesListViewModel @Inject constructor(
     private val _placesType = MutableStateFlow("tourismPlaces")
     val placesType: StateFlow<String> get() = _placesType
 
+    private val _distance = MutableStateFlow(10000)
+    val distance: StateFlow<Int> get() = _distance
+
     fun setPlacesType(type: String) {
         _placesType.value = type
+    }
+
+    fun setDistance(type: Int) {
+        _distance.value = type
     }
 
     fun userLocalPlaces(userLocal: MutableState<LatLng>) {
         val latitude = userLocal.value.latitude
         val longitude = userLocal.value.longitude
-        val distance = 50000
 
-        val overpassQueryProvider = overpassQueryProviderFactory.create(latitude, longitude, distance)
+        val overpassQueryProvider = overpassQueryProviderFactory.create(latitude, longitude, distance.value)
         fetchPlaces(_tourismPlaces, overpassQueryProvider.getQueryTourism())
         fetchPlaces(_historicPlaces, overpassQueryProvider.getQueryHistoric())
         fetchPlaces(_museumAndArcPlaces, overpassQueryProvider.getQueryMuseumAndArchaeological())
