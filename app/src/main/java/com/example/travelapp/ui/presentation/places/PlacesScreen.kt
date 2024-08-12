@@ -34,7 +34,8 @@ import com.google.android.gms.maps.model.LatLng
 fun PlacesListScreen(
     modifier: Modifier = Modifier,
     viewModel: PlacesListViewModel = hiltViewModel(),
-    userLocal: MutableState<LatLng>
+    userLocal: MutableState<LatLng>,
+    selectedPlaces: (LatLng) -> Unit
 ) {
     val tourismPlaces by viewModel.tourismPlaces.collectAsState()
     val historicPlaces by viewModel.historicPlaces.collectAsState()
@@ -106,7 +107,9 @@ fun PlacesListScreen(
             .fillMaxSize()
             .padding(top = 144.dp)) {
             items(places.value.elements) { response ->
-                if (!response.tags?.get("name").isNullOrEmpty()) ListItem(response = response, imagePainter = painterResource(id = places.value.icon!!))
+                if (!response.tags?.get("name").isNullOrEmpty()) ListItem(response = response,
+                    imagePainter = painterResource(id = places.value.icon!!),
+                    selectedPlaces)
             }
         }
 
@@ -115,11 +118,12 @@ fun PlacesListScreen(
 }
 
 @Composable
-fun ListItem(response: Element, imagePainter: Painter) {
+fun ListItem(response: Element, imagePainter: Painter, selectedPlaces: (LatLng) -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(16.dp)
+            .clickable { selectedPlaces(LatLng(0.0, 0.0)) },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
