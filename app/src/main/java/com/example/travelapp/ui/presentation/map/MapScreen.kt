@@ -28,8 +28,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
+import com.example.travelapp.ui.component.CustomSearchBar
 import com.example.travelapp.ui.component.LocationCoarsePermissionTextProvider
 import com.example.travelapp.ui.component.PermissionDialog
+import com.example.travelapp.ui.component.SearchBarState
 import com.example.travelapp.ui.presentation.map.viewModel.MapScreenViewModel
 import com.example.travelapp.utility.getActivityOrNull
 import com.example.travelapp.utility.hasLocationPermission
@@ -99,7 +101,8 @@ fun MapScreen(
                 }
 
             }
-        }, onStartEvent = {
+        },
+        onStartEvent = {
             if (!context.hasLocationPermission()) {
                 if (!shouldShowRequestPermissionRationale(
                         context as Activity,
@@ -107,16 +110,15 @@ fun MapScreen(
                     ) && !shouldShowRequestPermissionRationale(
                         context,
                         Manifest.permission.ACCESS_COARSE_LOCATION
-                    )) {
+                    )
+                ) {
                     multiplePermissions.launch(permissionsToRequest)
-
 
 
                 }
             }
 
         },
-
         onCreateEvent = {
             if (!context.hasLocationPermission()) {
                 multiplePermissions.launch(permissionsToRequest)
@@ -180,6 +182,7 @@ fun MapScreen(
             floatingActionButtonPosition = FabPosition.Center
 
         ) { paddingValues ->
+            CustomSearchBar(searchBarState = SearchBarState.SEARCH_IN_MAP)
             GoogleMap(
                 modifier = modifier.padding(paddingValues),
                 cameraPositionState = cameraPositionState,

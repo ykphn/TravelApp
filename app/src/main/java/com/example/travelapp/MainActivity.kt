@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 
 import com.example.travelapp.data.remote.repository.OverpassRepository
-import com.example.travelapp.ui.presentation.MainScreen
+import com.example.travelapp.ui.presentation.home.MainScreen
 import com.example.travelapp.ui.theme.TravelAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
