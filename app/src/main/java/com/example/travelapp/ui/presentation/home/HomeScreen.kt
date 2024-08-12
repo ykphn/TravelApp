@@ -1,4 +1,4 @@
-package com.example.travelapp.ui.presentation
+package com.example.travelapp.ui.presentation.home
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.background
