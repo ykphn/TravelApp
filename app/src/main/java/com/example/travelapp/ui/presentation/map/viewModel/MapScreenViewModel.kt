@@ -4,7 +4,9 @@ import android.location.Location
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.travelapp.data.location.api.LocationManager
+import com.example.travelapp.data.maps.MapsRepository
 import com.example.travelapp.utility.ScreenState
+import com.google.android.libraries.places.api.model.Place
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,20 +17,37 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MapScreenViewModel @Inject constructor(
-    private val locationManager: LocationManager
+    private val locationManager: LocationManager,
+    private val mapsRepository: MapsRepository
 ) : ViewModel() {
     private val _location = MutableStateFlow<Location?>(null)
     val location = _location.asStateFlow()
 
-    private val _isFirstLoading = MutableStateFlow<Boolean>(true)
+    private val _isFirstLoading = MutableStateFlow(true)
     val isFirstLoading = _isFirstLoading.asStateFlow()
 
-    private val _isLoading = MutableStateFlow<Boolean>(false)
+    private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
 
     private val _visibleDialogQueue = MutableStateFlow<List<String>>(emptyList())
     val visibleDialogQueue = _visibleDialogQueue.asStateFlow()
+
+    private val _searchText = MutableStateFlow("")
+    val searchText = _searchText.asStateFlow()
+    private val _searchBarState = MutableStateFlow(false)
+    val searchBarState = _searchBarState.asStateFlow()
+
+    private val _placesList = MutableStateFlow<List<Place>?>(null)
+    val placesList = _placesList.asStateFlow()
+
+    fun setSearchBarState(state: Boolean) {
+        _searchBarState.value = state
+    }
+
+    fun setSearchText(text: String) {
+        _searchText.value = text
+    }
 
     fun dismissDialog() {
 
@@ -43,7 +62,7 @@ class MapScreenViewModel @Inject constructor(
         }
     }
 
-    private val _isPermissionGranted = MutableStateFlow<Boolean>(false)
+    private val _isPermissionGranted = MutableStateFlow(false)
     val isPermissionGranted = _isPermissionGranted.asStateFlow()
 
     init {
@@ -75,7 +94,7 @@ class MapScreenViewModel @Inject constructor(
         }
     }
 
-    fun getLastLocation() {
+    private fun getLastLocation() {
         viewModelScope.launch {
 
             locationManager.getLastLocation().collectLatest { state ->
@@ -104,6 +123,22 @@ class MapScreenViewModel @Inject constructor(
                 }
 
             }
+        }
+    }
+    fun getPlacesByString(query:String){
+        viewModelScope.launch {
+           mapsRepository.searchPlacesByText(query).collectLatest { screenState->
+               when(screenState){
+                   is ScreenState.Error -> TODO()
+                   is ScreenState.Loading -> println("deneme")
+                   is ScreenState.Success ->  {
+                          println(screenState.data)
+
+                       _placesList.update { screenState.data }
+
+                   }
+               }
+           }
         }
     }
 

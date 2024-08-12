@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -13,32 +14,31 @@ import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.android.volley.BuildConfig
-
-import com.example.travelapp.R
-import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.api.model.AutocompletePrediction
 import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.api.net.FetchPlaceRequest
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
-import com.google.android.libraries.places.api.net.PlacesClient
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomSearchBar(modifier: Modifier = Modifier,searchBarState: SearchBarState) {
+fun CustomSearchBar(
+    modifier: Modifier = Modifier,
+    searchBarState: SearchBarState,
+    onQueryChange: (String) -> Unit,
+    onSearch: (String) -> Unit,
+    onActiveChange: (Boolean) -> Unit,
+    isActive: Boolean,
+    searchText: String,
+    placeList: List<Place>?
+) {
     val viewModel :SearchViewModel = hiltViewModel()
 
     SearchBar(
-        query = "",
-        onQueryChange = {},
-        onSearch = {},
-        active = false,
-        onActiveChange = {},
+        query = searchText,
+        onQueryChange = onQueryChange,
+        onSearch = onSearch,
+        active = isActive,
+        onActiveChange = onActiveChange,
         leadingIcon = {
             Icon(imageVector = Icons.Default.Search,
                 contentDescription ="SearchIcon" , modifier = Modifier.clickable {
@@ -51,6 +51,13 @@ fun CustomSearchBar(modifier: Modifier = Modifier,searchBarState: SearchBarState
 
     ) {
 
+        placeList?.let { idx->
+            idx.forEach{ response ->
+                Card {
+                    response.name?.let { Text(text = it) }
+                }
+            }
+        }
 
     }
 
