@@ -2,6 +2,7 @@ package com.example.travelapp.ui.presentation.map
 
 import android.Manifest
 import android.app.Activity
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
@@ -43,7 +44,6 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
 
-
 private val permissionsToRequest = arrayOf(
     Manifest.permission.ACCESS_FINE_LOCATION,
     Manifest.permission.ACCESS_COARSE_LOCATION
@@ -54,11 +54,9 @@ fun MapScreen(
     modifier: Modifier = Modifier,
     viewModel: MapScreenViewModel = hiltViewModel(),
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
-    selectedPlaces: MutableState<LatLng>,
+    selectedPlaces: MutableState<LatLng?>,
     userLocalRollBack: (LatLng) -> Unit
 ) {
-
-
     val location by viewModel.location.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val isFirstLoading by viewModel.isFirstLoading.collectAsState()
@@ -69,13 +67,17 @@ fun MapScreen(
     val searchBarState by viewModel.searchBarState.collectAsState()
     val placeList by viewModel.placesList.collectAsState()
 
-    val latLng = LatLng(location.let { loc -> loc?.latitude } ?: 0.0,
-        location.let { it?.longitude } ?: 0.0
+    val latLng = LatLng(
+        location?.latitude ?: 0.0,
+        location?.longitude ?: 0.0
     )
-    val cameraPositionState = rememberCameraPositionState() {
-        position = CameraPosition.fromLatLngZoom(latLng, 5f)
 
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(latLng, 5f)
     }
+
+    val markerState = rememberMarkerState(position = selectedPlaces.value ?: latLng)
+
     val multiplePermissions = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
         onResult = { perms ->
@@ -84,11 +86,9 @@ fun MapScreen(
                     permission = permission,
                     isGranted = perms[permission] == true
                 )
-
             }
         }
     )
-
 
     ObserverLifecycleEvent(
         lifecycleOwner = lifecycleOwner,
@@ -96,9 +96,7 @@ fun MapScreen(
             if (context.hasLocationPermission()) {
                 dialogQueue.forEach { _ ->
                     viewModel.dismissDialog()
-
                 }
-
             }
         },
         onStartEvent = {
@@ -112,48 +110,51 @@ fun MapScreen(
                     )
                 ) {
                     multiplePermissions.launch(permissionsToRequest)
-
-
                 }
             }
-
         },
         onCreateEvent = {
             if (!context.hasLocationPermission()) {
                 multiplePermissions.launch(permissionsToRequest)
-
-
             }
         },
     )
 
-
     dialogQueue.forEach { perms ->
         PermissionDialog(
             permissionTextProvider = LocationCoarsePermissionTextProvider(),
-
             onDismiss = {
                 viewModel.onPermissionResult(permission = perms, isGranted = false)
             },
             onGoToAppSettingsClick = {
                 context.getActivityOrNull()?.openAppSettings()
-
             }
         )
     }
 
     LaunchedEffect(key1 = isLoading, key2 = location) {
         location?.let {
+            val newLatLng = LatLng(it.latitude, it.longitude)
+            markerState.position = newLatLng
             cameraPositionState.animate(
                 CameraUpdateFactory.newCameraPosition(
-                    CameraPosition.fromLatLngZoom(latLng, 10f)
+                    CameraPosition.fromLatLngZoom(newLatLng, 10f)
                 ), 1000
             )
-            userLocalRollBack(latLng)
+            userLocalRollBack(newLatLng)
         }
-
     }
 
+    LaunchedEffect(selectedPlaces) {
+        selectedPlaces.value?.let {
+            userLocalRollBack(it)
+            markerState.position = it
+            val cameraUpdate = CameraUpdateFactory.newCameraPosition(
+                CameraPosition.fromLatLngZoom(it, 15f)
+            )
+            cameraPositionState.animate(cameraUpdate, 1000)
+        }
+    }
 
     if (isFirstLoading) {
         Box(
@@ -162,8 +163,6 @@ fun MapScreen(
         ) {
             CircularProgressIndicator()
         }
-
-
     } else {
         Scaffold(
             floatingActionButton = {
@@ -179,7 +178,6 @@ fun MapScreen(
                 }
             },
             floatingActionButtonPosition = FabPosition.Center
-
         ) { paddingValues ->
 
             CustomSearchBar(
@@ -202,28 +200,18 @@ fun MapScreen(
                 modifier = modifier.padding(paddingValues),
                 cameraPositionState = cameraPositionState,
             ) {
-                // Add a marker to the center to check if the map is rendering
                 Marker(
-                    state = rememberMarkerState(
-                        position = latLng,
-                    ),
-                    title = "Center of Map",
-                    snippet = "Check if map is loading "
+                    state = markerState,
+                    title = "Selected Place",
+                    snippet = "This is the selected place"
                 )
-
-
             }
-
         }
-
     }
-
-
 }
 
 @Composable
 fun ObserverLifecycleEvent(
-    modifier: Modifier = Modifier,
     lifecycleOwner: LifecycleOwner,
     onCreateEvent: () -> Unit = {},
     onStartEvent: () -> Unit = {},
@@ -251,7 +239,3 @@ fun ObserverLifecycleEvent(
         }
     }
 }
-
-
-
-

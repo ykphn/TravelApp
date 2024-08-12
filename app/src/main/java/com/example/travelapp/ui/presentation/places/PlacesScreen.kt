@@ -47,7 +47,7 @@ fun PlacesListScreen(
     val places = remember { mutableStateOf(tourismPlaces) }
 
     LaunchedEffect(tourismPlaces, historicPlaces, museumAndArcPlaces) {
-        when(placesType) {
+        when (placesType) {
             "tourismPlaces" -> places.value = tourismPlaces
             "historicPlaces" -> places.value = historicPlaces
             "museumAndArcPlaces" -> places.value = museumAndArcPlaces
@@ -55,40 +55,53 @@ fun PlacesListScreen(
     }
 
     LaunchedEffect(userLocal) {
-        Log.d("PlacesListViewModel", "$userLocal")
         viewModel.userLocalPlaces(userLocal)
     }
 
-    Box(modifier = modifier
-        .fillMaxSize()
+    Box(
+        modifier = modifier
+            .fillMaxSize()
     ) {
 
-        LazyColumn(modifier = modifier
-            .fillMaxSize()
-            .padding(top = 100.dp)) {
+        LazyColumn(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(top = 100.dp)
+        ) {
             items(places.value.elements) { response ->
-                if (!response.tags?.get("name").isNullOrEmpty()) ListItem(response = response,
+                if (!response.tags?.get("name").isNullOrEmpty()) ListItem(
+                    response = response,
                     imagePainter = painterResource(id = places.value.icon!!),
-                    selectedPlaces)
+                    selectedPlaces
+                )
             }
         }
 
-        if (dropdownMenu.value)  {
-            DropdownFilterMenu( type = placesType,onSelect = { type ->
+        if (dropdownMenu.value) {
+            DropdownFilterMenu(type = placesType, onSelect = { type ->
                 viewModel.setPlacesType(type)
-                when(type) {
-                    "tourismPlaces" -> { places.value = tourismPlaces }
-                    "historicPlaces" -> { places.value = historicPlaces }
-                    "museumAndArcPlaces" -> { places.value = museumAndArcPlaces }
+                when (type) {
+                    "tourismPlaces" -> {
+                        places.value = tourismPlaces
+                    }
+
+                    "historicPlaces" -> {
+                        places.value = historicPlaces
+                    }
+
+                    "museumAndArcPlaces" -> {
+                        places.value = museumAndArcPlaces
+                    }
                 }
             })
         }
 
-        Box(modifier = modifier
-            .fillMaxWidth()
-            .padding(top = 72.dp, end = 16.dp)
-            .height(32.dp),
-        contentAlignment = Alignment.CenterEnd
+        Box(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(top = 72.dp, end = 16.dp)
+                .height(32.dp),
+            contentAlignment = Alignment.CenterEnd
         ) {
             Box(
                 modifier = modifier
@@ -113,7 +126,6 @@ fun PlacesListScreen(
         }
 
 
-
     }
 
 }
@@ -124,7 +136,10 @@ fun ListItem(response: Element, imagePainter: Painter, selectedPlaces: (LatLng) 
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
-            .clickable { selectedPlaces(LatLng(0.0, 0.0)) },
+            .clickable {
+                if (response.lat != null && response.lon != null)
+                    selectedPlaces(LatLng(response.lat, response.lon))
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
