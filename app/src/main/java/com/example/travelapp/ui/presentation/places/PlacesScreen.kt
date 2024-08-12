@@ -104,7 +104,7 @@ fun PlacesListScreen(
 
         LazyColumn(modifier = modifier
             .fillMaxSize()
-            .padding(top = 100.dp)) {
+            .padding(top = 144.dp)) {
             items(places.value.elements) { response ->
                 if (!response.tags?.get("name").isNullOrEmpty()) ListItem(response = response, imagePainter = painterResource(id = places.value.icon!!))
             }
