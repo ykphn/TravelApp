@@ -5,9 +5,7 @@ import android.app.Activity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -19,13 +17,10 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
@@ -68,10 +63,9 @@ fun MapScreen(
     val isPermissionGranted by viewModel.isPermissionGranted.collectAsState()
     val dialogQueue by viewModel.visibleDialogQueue.collectAsState()
     val context = LocalContext.current
-
-    var checkPermissionOneTime = remember {
-        mutableStateOf(true)
-    }
+    val searchText by viewModel.searchText.collectAsState()
+    val searchBarState by viewModel.searchBarState.collectAsState()
+    val placeList by viewModel.placesList.collectAsState()
 
     val latLng = LatLng(location.let { loc -> loc?.latitude } ?: 0.0,
         location.let { it?.longitude } ?: 0.0
@@ -186,7 +180,21 @@ fun MapScreen(
 
         ) { paddingValues ->
 
-            CustomSearchBar(searchBarState = SearchBarState.SEARCH_IN_MAP)
+            CustomSearchBar(
+                searchBarState = SearchBarState.SEARCH_IN_MAP,
+                onQueryChange = {
+                    viewModel.setSearchText(it)
+                },
+                onSearch = {
+                    viewModel.getPlacesByString(it)
+                },
+                onActiveChange = {
+                    viewModel.setSearchBarState(it)
+                },
+                isActive = searchBarState,
+                searchText = searchText,
+                placeList = placeList
+            )
 
             GoogleMap(
                 modifier = modifier.padding(paddingValues),
