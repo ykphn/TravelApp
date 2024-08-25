@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,14 +24,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.FontScaling
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun DropdownFilterMenu(modifier: Modifier = Modifier, type: String ,onSelect : (String) -> Unit) {
+fun DropdownFilterMenu(
+    modifier: Modifier = Modifier,
+    type: String,
+    distance: Int,
+    onSelect: (String) -> Unit,
+    selectDistance: (Int) -> Unit
+) {
     val selectedButton = remember { mutableStateOf(type) }
-    val sliderPosition = remember { mutableIntStateOf(500) }
+    val sliderPosition = remember { mutableIntStateOf(distance) }
 
     Box(
         modifier = modifier
@@ -46,7 +50,7 @@ fun DropdownFilterMenu(modifier: Modifier = Modifier, type: String ,onSelect : (
             Row(
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(top = 8.dp, end = 80.dp, bottom = 0.dp, start = 16.dp)
+                    .padding(top = 72.dp, end = 80.dp, bottom = 0.dp, start = 16.dp)
                     .height(32.dp)
                     .background(
                         Color(0xFF000000),
@@ -68,7 +72,9 @@ fun DropdownFilterMenu(modifier: Modifier = Modifier, type: String ,onSelect : (
                             shape = RoundedCornerShape(8.dp)
                         )
 
-                        .clickable { selectedButton.value = "tourismPlaces"; onSelect("tourismPlaces") },
+                        .clickable {
+                            selectedButton.value = "tourismPlaces"; onSelect("tourismPlaces")
+                        },
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -111,7 +117,8 @@ fun DropdownFilterMenu(modifier: Modifier = Modifier, type: String ,onSelect : (
                             shape = RoundedCornerShape(8.dp)
                         )
                         .clickable {
-                            selectedButton.value = "museumAndArcPlaces"; onSelect("museumAndArcPlaces")
+                            selectedButton.value =
+                                "museumAndArcPlaces"; onSelect("museumAndArcPlaces")
                         },
                     contentAlignment = Alignment.Center
                 ) {
@@ -123,27 +130,35 @@ fun DropdownFilterMenu(modifier: Modifier = Modifier, type: String ,onSelect : (
                 }
             }
 
-            Column {
+            Column(modifier.background(color = Color(0xFFF0F0F0)))
+            {
                 Text(
-                    modifier = modifier.padding(top = 8.dp, end = 0.dp, bottom = 0.dp ,start = 24.dp),
+                    modifier = modifier.padding(
+                        top = 8.dp,
+                        end = 0.dp,
+                        bottom = 0.dp,
+                        start = 24.dp
+                    ),
                     text = "Distance Value: ${sliderPosition.intValue}",
                     style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Bold)
                 )
                 Slider(
                     value = sliderPosition.intValue.toFloat(),
-                    onValueChange = { newValue -> sliderPosition.intValue = newValue.toInt() },
-                    valueRange = 500f..10000f,
-                    steps = 18,
-                    modifier = modifier.padding(top = 0.dp, end = 16.dp, bottom = 0.dp ,start = 16.dp)
+                    onValueChange = { newValue ->
+                        sliderPosition.intValue = newValue.toInt()
+                        selectDistance(newValue.toInt())
+                    },
+                    valueRange = 500f..20000f,
+                    steps = 38,
+                    modifier = modifier.padding(
+                        top = 0.dp,
+                        end = 16.dp,
+                        bottom = 0.dp,
+                        start = 16.dp
+                    )
                 )
-
             }
         }
-
-
     }
+
 }
-
-
-
-

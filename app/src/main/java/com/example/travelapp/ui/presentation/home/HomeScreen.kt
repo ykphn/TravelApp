@@ -20,32 +20,36 @@ import com.google.android.gms.maps.model.LatLng
 
 @Composable
 fun MainScreen() {
+
     val selectedButton = remember { mutableStateOf("Map") }
     val userLocal = remember { mutableStateOf(LatLng(0.0, 0.0)) }
-    val selectedData = remember { mutableStateOf(LatLng(0.0, 0.0)) }
+    val selectedData = remember { mutableStateOf<LatLng?>(null) }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFFF0F0F0))
     ) {
-
         Crossfade(targetState = selectedButton.value, label = "Screen Changer") { screen ->
             when (screen) {
-                "Map" -> MapScreen( selectedPlaces = selectedData ,userLocalRollBack = { data ->
-                    userLocal.value = data
-                })
-                "List" -> PlacesListScreen( userLocal = userLocal, selectedPlaces = { data ->
+                "Map" -> {
+                    MapScreen(selectedPlaces = selectedData, userLocalRollBack = { data ->
+                        userLocal.value = data
+                    })
+
+                }
+
+                "List" -> PlacesListScreen(userLocal = userLocal, selectedPlaces = { data ->
                     selectedData.value = data
-                } )
+                    selectedButton.value = "Map"
+                })
             }
         }
-
 
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 108.dp, start = 16.dp, end = 16.dp)
+                .padding(top = 16.dp, start = 16.dp, end = 16.dp)
                 .height(48.dp)
                 .background(
                     Color(0xFFFFFFFF),
@@ -105,10 +109,7 @@ fun MainScreen() {
                     textAlign = TextAlign.Center
                 )
             }
-
         }
     }
+
 }
-
-
-

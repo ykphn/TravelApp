@@ -1,6 +1,5 @@
 package com.example.travelapp.ui.presentation.places
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -37,17 +36,18 @@ fun PlacesListScreen(
     userLocal: MutableState<LatLng>,
     selectedPlaces: (LatLng) -> Unit
 ) {
+
     val tourismPlaces by viewModel.tourismPlaces.collectAsState()
     val historicPlaces by viewModel.historicPlaces.collectAsState()
     val museumAndArcPlaces by viewModel.museumAndArcPlaces.collectAsState()
     val placesType by viewModel.placesType.collectAsState()
+    val distance by viewModel.distance.collectAsState()
 
     val dropdownMenu = remember { mutableStateOf(false) }
-
     val places = remember { mutableStateOf(tourismPlaces) }
 
     LaunchedEffect(tourismPlaces, historicPlaces, museumAndArcPlaces) {
-        when(placesType) {
+        when (placesType) {
             "tourismPlaces" -> places.value = tourismPlaces
             "historicPlaces" -> places.value = historicPlaces
             "museumAndArcPlaces" -> places.value = museumAndArcPlaces
@@ -55,30 +55,60 @@ fun PlacesListScreen(
     }
 
     LaunchedEffect(userLocal) {
-        Log.d("PlacesListViewModel", "$userLocal")
         viewModel.userLocalPlaces(userLocal)
     }
 
-    Box(modifier = modifier
-        .fillMaxSize()
-    ) {
+    LaunchedEffect(distance, dropdownMenu.value) {
+        if (!dropdownMenu.value) {
+            viewModel.userLocalPlaces(userLocal)
+        }
+    }
 
-        if (dropdownMenu.value)  {
-            DropdownFilterMenu( type = placesType,onSelect = { type ->
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+    ) {
+        LazyColumn(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(top = 100.dp)
+        ) {
+            items(places.value.elements) { response ->
+                if (!response.tags?.get("name").isNullOrEmpty()) ListItem(
+                    response = response,
+                    imagePainter = painterResource(id = places.value.icon!!),
+                    selectedPlaces
+                )
+            }
+        }
+
+        if (dropdownMenu.value) {
+            DropdownFilterMenu(type = placesType, onSelect = { type ->
                 viewModel.setPlacesType(type)
-                when(type) {
-                    "tourismPlaces" -> { places.value = tourismPlaces }
-                    "historicPlaces" -> { places.value = historicPlaces }
-                    "museumAndArcPlaces" -> { places.value = museumAndArcPlaces }
+                when (type) {
+                    "tourismPlaces" -> {
+                        places.value = tourismPlaces
+                    }
+
+                    "historicPlaces" -> {
+                        places.value = historicPlaces
+                    }
+
+                    "museumAndArcPlaces" -> {
+                        places.value = museumAndArcPlaces
+                    }
                 }
+            }, distance = distance, selectDistance = { distance ->
+                viewModel.setDistance(distance)
             })
         }
 
-        Box(modifier = modifier
-            .fillMaxWidth()
-            .padding(top = 8.dp, end = 16.dp)
-            .height(32.dp),
-        contentAlignment = Alignment.CenterEnd
+        Box(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(top = 72.dp, end = 16.dp)
+                .height(32.dp),
+            contentAlignment = Alignment.CenterEnd
         ) {
             Box(
                 modifier = modifier
@@ -101,18 +131,6 @@ fun PlacesListScreen(
                 )
             }
         }
-
-
-        LazyColumn(modifier = modifier
-            .fillMaxSize()
-            .padding(top = 144.dp)) {
-            items(places.value.elements) { response ->
-                if (!response.tags?.get("name").isNullOrEmpty()) ListItem(response = response,
-                    imagePainter = painterResource(id = places.value.icon!!),
-                    selectedPlaces)
-            }
-        }
-
     }
 
 }
@@ -123,7 +141,10 @@ fun ListItem(response: Element, imagePainter: Painter, selectedPlaces: (LatLng) 
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
-            .clickable { selectedPlaces(LatLng(0.0, 0.0)) },
+            .clickable {
+                if (response.lat != null && response.lon != null)
+                    selectedPlaces(LatLng(response.lat, response.lon))
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
@@ -138,4 +159,5 @@ fun ListItem(response: Element, imagePainter: Painter, selectedPlaces: (LatLng) 
             style = MaterialTheme.typography.bodyMedium
         )
     }
+
 }

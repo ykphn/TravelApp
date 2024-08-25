@@ -16,23 +16,30 @@ class OverpassQueryProvider @Inject constructor(
     }
 
     override fun getQueryMuseumAndArchaeological(): OverpassQueryResponse {
-        return OverpassQueryResponse(buildQuery(
-            "tourism" to "museum",
-            "historic" to "archaeological_site"
-        ), Icon.museum)
+        return OverpassQueryResponse(
+            buildQuery(
+                "tourism" to "museum",
+                "historic" to "archaeological_site"
+            ), Icon.museum
+        )
     }
 
     override fun getQueryHistoric(): OverpassQueryResponse {
-        return OverpassQueryResponse(buildQuery(
-            "historic" to "ruins",
-            "historic" to "monument",
-            "historic" to "memorial"
-        ), Icon.historic)
+        return OverpassQueryResponse(
+            buildQuery(
+                "historic" to "ruins",
+                "historic" to "monument",
+                "historic" to "memorial"
+            ), Icon.historic
+        )
     }
 
     override fun getQueryTourism(): OverpassQueryResponse {
-        return OverpassQueryResponse(buildQuery(
-            "tourism" to "attraction"
-        ), Icon.tourism)
+        return OverpassQueryResponse(
+            buildQuery(
+                "tourism" to "attraction"
+            ), Icon.tourism
+        )
     }
+
 }

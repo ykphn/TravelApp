@@ -1,6 +1,7 @@
 package com.example.travelapp.ui.presentation.map.viewModel
 
 import android.location.Location
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.travelapp.data.location.api.LocationManager
@@ -29,17 +30,24 @@ class MapScreenViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
 
-
     private val _visibleDialogQueue = MutableStateFlow<List<String>>(emptyList())
     val visibleDialogQueue = _visibleDialogQueue.asStateFlow()
 
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
+
     private val _searchBarState = MutableStateFlow(false)
     val searchBarState = _searchBarState.asStateFlow()
 
     private val _placesList = MutableStateFlow<List<Place>?>(null)
     val placesList = _placesList.asStateFlow()
+
+    private val _isPermissionGranted = MutableStateFlow(false)
+
+    init {
+
+        getLastLocation()
+    }
 
     fun setSearchBarState(state: Boolean) {
         _searchBarState.value = state
@@ -62,32 +70,16 @@ class MapScreenViewModel @Inject constructor(
         }
     }
 
-    private val _isPermissionGranted = MutableStateFlow(false)
-    val isPermissionGranted = _isPermissionGranted.asStateFlow()
-
-    init {
-
-        getLastLocation()
-    }
-
     fun getCurrentLocation() {
         viewModelScope.launch {
-
-
             locationManager.getCurrentLocation().collectLatest { state ->
                 when (state) {
-
-
                     is ScreenState.Error -> _isPermissionGranted.update { false }
                     is ScreenState.Loading -> _isLoading.update { true }
                     is ScreenState.Success -> {
-
-                        println(state.data)
-
                         _location.update { state.data }
                         _isLoading.update { false }
                         _isFirstLoading.update { false }
-
                     }
                 }
             }
@@ -96,41 +88,31 @@ class MapScreenViewModel @Inject constructor(
 
     private fun getLastLocation() {
         viewModelScope.launch {
-
             locationManager.getLastLocation().collectLatest { state ->
                 when (state) {
                     is ScreenState.Error -> {
                         _isPermissionGranted.update { false }
                         _isFirstLoading.update { false }
                     }
-
                     is ScreenState.Loading -> {
-
                         _isLoading.update { true }
-
                     }
-
                     is ScreenState.Success -> {
-
-
                         _location.update { state.data }
                         _isLoading.update { false }
                         _isFirstLoading.update { false }
-                        println(" ${_isFirstLoading.value}  ****")
-
                     }
-
                 }
-
             }
         }
     }
+
     fun getPlacesByString(query:String){
         viewModelScope.launch {
            mapsRepository.searchPlacesByText(query).collectLatest { screenState->
                when(screenState){
-                   is ScreenState.Error -> TODO()
-                   is ScreenState.Loading -> println("deneme")
+                   is ScreenState.Error -> Log.d("MapScreenViewModel", "Error")
+                   is ScreenState.Loading -> Log.d("MapScreenViewModel", "Loading")
                    is ScreenState.Success ->  {
                           println(screenState.data)
 
@@ -141,6 +123,5 @@ class MapScreenViewModel @Inject constructor(
            }
         }
     }
-
 
 }

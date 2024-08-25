@@ -9,19 +9,16 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchViewModel @Inject constructor (
+class SearchViewModel @Inject constructor(
     private val mapsRepository: MapsRepository
-):ViewModel() {
+) : ViewModel() {
 
-
-
-    fun getPlaces(){
+    fun getPlaces() {
         viewModelScope.launch {
-            mapsRepository.searchPlacesByText("izmir").collectLatest { it->
+            mapsRepository.searchPlacesByText("izmir").collectLatest { it ->
                 println(it.data)
             }
         }
-
     }
 
 }
